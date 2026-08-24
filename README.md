@@ -87,17 +87,38 @@ reprinted and the product shots are redone.
   collect emails at all, delete the `<form class="foot__sign">` block from
   `index.html` and the `#signup` handler from `site.js`.
 
-## Deploying
+## Deploying — it is already live
 
-It is static, so anything works — Netlify, Vercel, Cloudflare Pages, GitHub Pages,
-or plain S3. Drag the folder in; there is nothing to build. Two notes:
+**Review build:** <https://dragonai808.github.io/botanical-oak/>
+**Repo:** <https://github.com/DragonAI808/botanical-oak>
 
-- Ship `index.html`, `assets/`, and nothing else. The masters at the root
-  (`bar.jpg`, `ugc1.mp4`, …) are 58 MB and are **not** referenced by the page —
-  leave them out of the upload.
-- Fonts load from Google Fonts, so the page needs network access for type. If you
-  would rather self-host them, download Cormorant Garamond and Jost into
-  `assets/fonts/` and swap the `<link>` in `index.html` for `@font-face` rules.
+GitHub Pages serves `main` from the repo root. To publish a change:
+
+```bash
+git add -A && git commit -m "your message" && git push
+```
+
+Pages rebuilds on its own in about 20 seconds. There is no build step.
+
+### Two things to do when this stops being a draft
+
+1. **Remove the noindex.** Delete the `<meta name="robots" content="noindex,
+   nofollow">` line from `index.html` and delete `robots.txt`. Until you do,
+   search engines will deliberately skip the site.
+2. **Decide about the public repo.** Free-tier Pages requires a public repo, so
+   the source and assets are public too. If that becomes a problem, Cloudflare
+   Pages direct-upload serves the built site while keeping the source private.
+
+### Notes
+
+- The ~58 MB of original masters (`bar.jpg`, `ugc1.mp4`, …) are gitignored — the
+  site never references them. **Those patterns are root-anchored on purpose**
+  (`/ugc1.mp4`, not `ugc1.mp4`): `assets/video/` holds optimized files with the
+  same names, and an unanchored pattern silently excludes those too, shipping the
+  site with broken video cards.
+- Fonts load from Google Fonts, so the page needs network access for type. To
+  self-host, download Cormorant Garamond and Jost into `assets/fonts/` and swap
+  the `<link>` in `index.html` for `@font-face` rules.
 
 ## Regenerating the images and video
 
