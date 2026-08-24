@@ -1,0 +1,17 @@
+# Original masters (~58 MB) live locally only — the site never references them.
+# Leading slash anchors these to the repo root, so the OPTIMIZED copies in
+# assets/video/ (same filenames!) are still tracked. Without the slash git
+# excludes those too and the video cards ship broken.
+/bar.jpg
+/barbox.jpg
+/box.jpg
+/lather.jpg
+/newsoaps.jpeg
+/stillvid.mp4
+/ugc1.mp4
+/ugc2.mp4
+
+# local tooling
+/.claude/
+node_modules/
+_chrome/
