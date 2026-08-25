@@ -169,6 +169,28 @@ The hero's vertical crop is pulled from a frame of `stillvid.mp4`:
 ffmpeg -i stillvid.mp4 -vf "select='eq(n\,6)',crop=1440:1843:0:717" -frames:v 1 -q:v 2 hero.jpg
 ```
 
+## Adding a new UGC clip
+
+Generate the clip in Higgsfield, then:
+
+```bash
+./tools/add-clip.sh ~/Downloads/whatever.mp4 ugc3 8.5
+```
+
+That transcodes it to web-safe H.264 + stereo AAC at 720px wide, writes a poster
+frame from the second you name, reports the size saving, and prints the markup to
+paste into the Stories row. Rerun with a different timestamp if the poster caught
+a blink — it just overwrites.
+
+**The transcode is not optional.** Higgsfield's Seedance models output HEVC/H.265,
+which most browsers refuse to decode; the clip appears broken or silent with no
+useful error. The script always re-encodes and tells you when the source was HEVC,
+so the cause is never a mystery.
+
+Shoot vertical (9:16) to match the existing cards, and keep clips to roughly
+15-20s — they autoplay muted in view and only get sound on tap, so length costs
+bandwidth without buying attention.
+
 ## Interaction tests (optional)
 
 `test/interactions.py` clicks every interactive control — the clip unmute toggles
