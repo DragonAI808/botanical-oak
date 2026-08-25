@@ -83,7 +83,7 @@
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
 
-  $$('[data-reveal], .statement__rule, [data-split-lines]').forEach(function (el) {
+  $$('[data-reveal], [data-split-lines]').forEach(function (el) {
     revealIO.observe(el);
   });
 
