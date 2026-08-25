@@ -174,13 +174,25 @@ ffmpeg -i stillvid.mp4 -vf "select='eq(n\,6)',crop=1440:1843:0:717" -frames:v 1 
 Generate the clip in Higgsfield, then:
 
 ```bash
-./tools/add-clip.sh ~/Downloads/whatever.mp4 ugc3 8.5
+./tools/add-clip.sh ~/Downloads/whatever.mp4 ugc3 --poster 8.5
 ```
 
 That transcodes it to web-safe H.264 + stereo AAC at 720px wide, writes a poster
 frame from the second you name, reports the size saving, and prints the markup to
 paste into the Stories row. Rerun with a different timestamp if the poster caught
 a blink — it just overwrites.
+
+**Trimming.** Generated video tends to fail *locally* — an extra hand appears at
+0:12 and the rest of the take is fine. Cut the bad seconds instead of throwing the
+clip away:
+
+```bash
+./tools/add-clip.sh ~/Downloads/whatever.mp4 ugc3 --from 0 --to 11.5 --poster 6
+```
+
+`--poster` is timed against the original clip, not the trimmed one, so you can read
+the number straight off whatever player you spotted it in. The script warns if the
+poster time falls outside the range you kept.
 
 **The transcode is not optional.** Higgsfield's Seedance models output HEVC/H.265,
 which most browsers refuse to decode; the clip appears broken or silent with no
