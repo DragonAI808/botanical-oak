@@ -829,6 +829,12 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   .nav.is-menu-open{ color:var(--cream); background:transparent; box-shadow:none; }
   .nav.is-menu-open .nav__links{ display:flex; }
 
+  /* The pinned visual carries its own top padding for nav clearance, so the
+     section must not add its own on top — stacked, they put ~124px of dead
+     space above the image on phones where desktop has none. */
+  .craft{ padding-top:0; }
+  .statement{ padding-bottom:clamp(3.5rem,8vh,5rem); }
+
   .craft__grid{ grid-template-columns:1fr; gap:0; }
 
   /* Pin the visual on phones too. Letting it scroll away puts the image above
