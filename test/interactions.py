@@ -134,6 +134,40 @@ with sync_playwright() as p:
     check("pinned image matches the active step", all(x["img"] == x["step"] for x in seen), True)
     m.close()
 
+    # ---------------- testimonials page ----------------
+    print("\n[7] TESTIMONIALS PAGE")
+    t = b.new_page(viewport={"width": 1440, "height": 900})
+    t.goto(URL + "/testimonials.html"); t.wait_for_load_state("networkidle"); t.wait_for_timeout(1600)
+    check("page loads with a title", "Testimonials" in t.title(), True)
+    check("ten testimonials", t.locator(".tcard").count(), 10)
+    check("every one has an attribution", t.locator(".tcard figcaption b").count(), 10)
+
+    # These are fabricated quotes on a real business's site. The banner is what
+    # stops them reading as genuine reviews, so it must not quietly disappear.
+    check("placeholder banner present", t.locator(".draftnote").is_visible(), True)
+    check("banner says they are not real",
+          "not real customer reviews" in t.locator(".draftnote").inner_text(), True)
+    check("page is noindex",
+          t.locator('meta[name="robots"]').get_attribute("content"), "noindex, nofollow")
+
+    # cross-page nav has to resolve back to the home sections, not to dead #anchors
+    hrefs = t.eval_on_selector_all(".nav__links a", "els=>els.map(e=>e.getAttribute('href'))")
+    check("no bare # anchors in subpage nav", [h for h in hrefs if h.startswith("#")], [])
+    check("nav points home", "index.html#bar" in hrefs, True)
+    check("current page marked",
+          t.locator('.nav__links a[aria-current="page"]').count(), 1)
+    dead = t.evaluate("""[...document.querySelectorAll('a[href^="#"]')]
+        .map(a=>a.getAttribute('href')).filter(h=>h!=='#'&&!document.querySelector(h))""")
+    check("no dead anchors on the page", dead, [])
+    t.close()
+
+    # and the home page must actually link to it
+    h = b.new_page(viewport={"width": 1440, "height": 900})
+    h.goto(URL); h.wait_for_load_state("networkidle"); h.wait_for_timeout(1200)
+    check("home nav links to testimonials",
+          h.locator('.nav__links a[href="testimonials.html"]').count(), 1)
+    h.close()
+
     b.close()
 
 print(f"\n{'='*52}\n{sum(results)}/{len(results)} passed")

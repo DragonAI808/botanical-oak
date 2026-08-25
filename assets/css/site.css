@@ -56,6 +56,11 @@ ul{ list-style:none; padding:0; }
 /* the UA rule for [hidden] loses to any display: declaration of ours */
 [hidden]{ display:none !important; }
 .sprite{ position:absolute; width:0; height:0; overflow:hidden; }
+/* available to screen readers, absent from the visual design */
+.vh{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0;
+}
 ::selection{ background:var(--forest); color:var(--cream); }
 
 :focus-visible{
@@ -716,6 +721,103 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   color:var(--sage); margin-bottom:.6rem;
 }
 .contact__rows span{ font-size:.92rem; color:rgba(245,238,224,.8); line-height:1.55; }
+
+/* ==========================================================================
+   SUBPAGE HEADER  (testimonials.html)
+   ========================================================================== */
+.phead{
+  position:relative; overflow:hidden;
+  background:var(--forest-dk); color:var(--cream);
+  padding:calc(var(--navh) + clamp(4rem,10vh,8rem)) var(--pad) clamp(3.5rem,8vh,6rem);
+  text-align:center;
+}
+.phead::before{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(80% 70% at 50% 0%, rgba(169,179,148,.18), transparent 62%);
+  pointer-events:none;
+}
+.phead > *{ position:relative; z-index:1; }
+.phead__mark{ width:38px; height:38px; color:var(--sage); margin:0 auto 1.6rem; }
+.phead__title{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(2.4rem,1.3rem + 4.2vw,5.2rem);
+  line-height:1.02; letter-spacing:-.015em;
+  margin-bottom:1.4rem;
+}
+.phead__lede{
+  color:rgba(245,238,224,.72);
+  font-size:clamp(1.02rem,.97rem + .3vw,1.15rem);
+  line-height:1.68; max-width:52ch; margin-inline:auto;
+}
+
+/* ==========================================================================
+   DRAFT NOTICE — delete this rule and its markup once the copy is real
+   ========================================================================== */
+.draftnote{
+  background:var(--gold); color:#2A2010;
+  padding:.95rem var(--pad);
+  font-size:.86rem; line-height:1.5; text-align:center;
+}
+.draftnote strong{ font-weight:600; letter-spacing:.04em; }
+
+/* ==========================================================================
+   TESTIMONIALS
+   ========================================================================== */
+.tlist{ max-width:var(--maxw); margin-inline:auto; padding:clamp(3.5rem,9vh,7rem) var(--pad); }
+
+/* columns give a masonry feel so uneven quote lengths do not leave ragged
+   gaps the way equal-height grid rows would */
+.tgrid{ columns:3; column-gap:clamp(1.2rem,2.4vw,2rem); }
+.tcard{
+  break-inside:avoid; -webkit-column-break-inside:avoid;
+  margin-bottom:clamp(1.2rem,2.4vw,2rem);
+  padding:clamp(1.6rem,2.6vw,2.3rem);
+  background:var(--cream-dp);
+  border:1px solid var(--line);
+  border-radius:3px;
+  transition:transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.tcard:hover{ transform:translateY(-3px); box-shadow:0 18px 40px -22px rgba(36,28,19,.45); }
+.tcard__q{ width:26px; height:26px; color:var(--oak); opacity:.5; margin-bottom:1rem; }
+.tcard blockquote{
+  margin:0 0 1.3rem;
+  font-family:var(--serif); font-style:italic; font-weight:400;
+  font-size:clamp(1.12rem,1rem + .5vw,1.4rem);
+  line-height:1.42; color:var(--ink);
+}
+.tcard figcaption{ display:flex; flex-direction:column; gap:.2rem; }
+.tcard figcaption b{
+  font-weight:500; font-size:.82rem; letter-spacing:.06em;
+}
+.tcard figcaption span{
+  font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:var(--oak);
+}
+
+/* two darker cards break up the field */
+.tcard--feature{
+  background:var(--forest); border-color:transparent; color:var(--cream);
+}
+.tcard--feature .tcard__q{ color:var(--sage); opacity:.8; }
+.tcard--feature blockquote{ color:var(--cream); }
+.tcard--feature figcaption span{ color:var(--sage); }
+
+.tlist__foot{
+  margin-top:clamp(2.5rem,6vh,4rem);
+  padding-top:clamp(2rem,5vh,3rem);
+  border-top:1px solid var(--line);
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:1.4rem;
+}
+.tlist__foot p{
+  font-family:var(--serif); font-style:italic;
+  font-size:clamp(1.1rem,1rem + .5vw,1.5rem); color:var(--ink-soft);
+}
+
+@media (max-width:1100px){ .tgrid{ columns:2; } }
+@media (max-width:680px){
+  .tgrid{ columns:1; }
+  .tlist__foot{ flex-direction:column; align-items:flex-start; }
+}
 
 /* ==========================================================================
    FOOTER

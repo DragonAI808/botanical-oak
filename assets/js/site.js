@@ -94,8 +94,16 @@
   var burger = $('#burger');
   var navLinks = $('#navLinks');
 
+  // The home hero is full-height, so handing over at 72% of the viewport is
+  // right there. Subpages have a shorter header and mark it [data-nav-trigger],
+  // otherwise the transparent nav would sit invisibly on their pale content.
+  var navTrigger = $('[data-nav-trigger]');
+
   function onNavScroll() {
-    nav.classList.toggle('is-stuck', window.scrollY > window.innerHeight * 0.72);
+    var threshold = navTrigger
+      ? Math.max(0, navTrigger.offsetHeight - nav.offsetHeight)
+      : window.innerHeight * 0.72;
+    nav.classList.toggle('is-stuck', window.scrollY > threshold);
   }
   onNavScroll();
 

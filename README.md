@@ -41,6 +41,10 @@ bar.jpg …  ugc2.mp4   your original masters, untouched
 | Contact | Inquiries — the site's only call to action. Wholesale, press, and general questions, all routed to one email address. |
 | Footer | Nav, batch-notice signup. |
 
+**`testimonials.html`** is a second page, linked from the nav: a forest-green header,
+ten quotes in a masonry grid with two darker feature cards, and a link back to the
+process. It shares the same CSS and JS as the home page.
+
 There is **no commerce** anywhere: no basket, no prices, no checkout. The site is a
 showcase with a way to get in touch. `test/interactions.py` asserts this stays true
 (it fails if a currency symbol or the word "basket" reappears). It also guards the
@@ -50,9 +54,27 @@ US wording — the suite fails if "England", "colour", "enquiries" or similar cr
 
 Three things are **placeholder** and need your real content:
 
-1. **Testimonial quotes** under the two UGC clips, in `index.html` (search for
-   `figcaption`). I wrote those as stand-ins — replace them with words your actual
-   customers said, or delete them and let the clips speak.
+1. **Every testimonial on the site is fabricated.** That means the two quotes under
+   the UGC clips in `index.html` *and* all ten on `testimonials.html`. I wrote them;
+   no customer said them and none of those people exist.
+
+   This matters more than ordinary placeholder copy. Publishing invented reviews as
+   though they were genuine is prohibited by the FTC Rule on the Use of Consumer
+   Reviews and Testimonials (16 CFR Part 465), which took effect in 2024 and carries
+   civil penalties per violation. It applies to a business's own website, not just
+   review platforms.
+
+   While the site is a `noindex` draft this is fine — it is layout filler. Before it
+   goes live for real, do one of:
+   - replace all twelve with real customer words you have permission to publish, or
+   - delete `testimonials.html`, drop the nav link, and remove the two `figcaption`
+     quotes in the Stories section.
+
+   `testimonials.html` carries a gold **Sample copy** banner saying the quotes are not
+   real, plus an HTML comment block above the list. Remove the banner only once the
+   quotes are genuine. `test/interactions.py` fails if the banner disappears while the
+   page is still there — that guard is deliberate, so don't delete the check to make
+   the suite pass.
 2. **The contact email address.** I used `hello@thebotanicaloak.com` as a
    placeholder — it is almost certainly not yours and mail to it will go nowhere.
    It appears in three places: the Contact section button, the footer "Email us"
