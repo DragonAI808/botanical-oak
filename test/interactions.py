@@ -107,6 +107,31 @@ with sync_playwright() as p:
     # body keeps overflow-x:hidden by design, so check the inline lock is released
     check("body scroll lock released", m.evaluate("document.body.style.overflow"), "")
     check("page can scroll", m.evaluate("(()=>{window.scrollTo(0,600);return window.scrollY>0})()"), True)
+
+    print("\n[6] MOBILE STICKY CRAFT IMAGE")
+    # Regression guard: the image used to scroll away above the steps on phones,
+    # so the cross-fade fired off-screen. It must stay pinned, and it must never
+    # cover the heading of the step it is illustrating.
+    check("visual is sticky on phones",
+          m.evaluate("getComputedStyle(document.querySelector('.craft__visual')).position"), "sticky")
+    top = m.evaluate("document.querySelector('.craft').getBoundingClientRect().top+window.scrollY")
+    seen = []
+    for off in (150, 450, 750):
+        # instant, not smooth: the CSS sets scroll-behavior:smooth and a
+        # ~1100px animated jump can outlast the wait, giving a false failure
+        m.evaluate("window.scrollTo({top:%d,behavior:'instant'})" % (top + off))
+        m.wait_for_timeout(650)
+        seen.append(m.evaluate("""(()=>{
+            const v=document.querySelector('.craft__visual').getBoundingClientRect();
+            const on=document.querySelector('.craft__step.is-on');
+            const h=on.querySelector('h2').getBoundingClientRect();
+            return {pinned: v.top<=2 && v.bottom>150,
+                    headingClear: h.top >= v.bottom-6 && h.bottom <= window.innerHeight,
+                    img: document.querySelector('.craft__img.is-active').dataset.step,
+                    step: on.dataset.step}})()"""))
+    check("image stays pinned while steps scroll past", all(x["pinned"] for x in seen), True)
+    check("active step's heading is never behind the image", all(x["headingClear"] for x in seen), True)
+    check("pinned image matches the active step", all(x["img"] == x["step"] for x in seen), True)
     m.close()
 
     b.close()

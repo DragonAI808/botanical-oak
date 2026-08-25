@@ -25,6 +25,7 @@
 
   --pad: clamp(1.25rem, 5vw, 5.5rem);
   --maxw: 1440px;
+  --navh: 3.35rem;        /* measured height of the stuck nav on phones */
   --ease: cubic-bezier(.22,.61,.36,1);
   --ease-io: cubic-bezier(.65,.05,.36,1);
 }
@@ -823,11 +824,27 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   .nav.is-menu-open{ color:var(--cream); background:transparent; box-shadow:none; }
   .nav.is-menu-open .nav__links{ display:flex; }
 
-  .craft__grid{ grid-template-columns:1fr; }
-  .craft__visual{ position:relative; top:0; }
-  .craft__frame{ aspect-ratio:3/2; }
+  .craft__grid{ grid-template-columns:1fr; gap:0; }
+
+  /* Pin the visual on phones too. Letting it scroll away puts the image above
+     the steps, so the cross-fade fires where nobody can see it. Sticky keeps
+     image and step on screen together, same as desktop. */
+  .craft__visual{
+    position:sticky;
+    top:0;
+    z-index:2;
+    /* bleed the ground to the viewport edges so steps scrolling underneath
+       stay hidden, including the strip behind the fixed nav */
+    margin-inline:calc(var(--pad) * -1);
+    padding:calc(var(--navh) + .7rem) var(--pad) .8rem;
+    background:var(--cream-dp);
+  }
+  /* 16/9 is near these photos' native 1.83 ratio, so it crops almost nothing
+     while leaving the steps most of the screen */
+  .craft__frame{ aspect-ratio:16/9; }
+  .craft__steps{ position:relative; z-index:1; }
   .craft__step{ opacity:1; padding:clamp(2rem,5vh,3rem) 0; }
-  .craft__step:first-child{ padding-top:clamp(2.5rem,6vh,3.5rem); }
+  .craft__step:first-child{ padding-top:clamp(1.4rem,4vh,2.2rem); }
 
   .reel{ grid-template-columns:1fr; justify-items:start; }
   .reel__video{ align-self:center; }

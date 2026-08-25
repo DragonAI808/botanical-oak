@@ -163,17 +163,31 @@
   var craftNum = $('#craftNum');
 
   if (steps.length && crafts.length) {
-    var stepIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var n = +e.target.dataset.step;
-        steps.forEach(function (s) { s.classList.toggle('is-on', +s.dataset.step === n); });
-        crafts.forEach(function (img) { img.classList.toggle('is-active', +img.dataset.step === n); });
-        if (craftNum) craftNum.textContent = ('0' + (n + 1)).slice(-2);
-      });
-    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    var narrowMQ = window.matchMedia('(max-width:900px)');
+    var stepIO = null;
 
-    steps.forEach(function (s) { stepIO.observe(s); });
+    function buildStepIO() {
+      if (stepIO) stepIO.disconnect();
+      // Phones pin the image to the top of the viewport, so the activation band
+      // sits lower down: a step takes over while its heading is still visible
+      // below the image, rather than after it has slid underneath.
+      var band = narrowMQ.matches ? '-55% 0px -35% 0px' : '-45% 0px -45% 0px';
+
+      stepIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var n = +e.target.dataset.step;
+          steps.forEach(function (s) { s.classList.toggle('is-on', +s.dataset.step === n); });
+          crafts.forEach(function (img) { img.classList.toggle('is-active', +img.dataset.step === n); });
+          if (craftNum) craftNum.textContent = ('0' + (n + 1)).slice(-2);
+        });
+      }, { rootMargin: band, threshold: 0 });
+
+      steps.forEach(function (s) { stepIO.observe(s); });
+    }
+
+    buildStepIO();
+    if (narrowMQ.addEventListener) narrowMQ.addEventListener('change', buildStepIO);
     steps[0].classList.add('is-on');
   }
 
