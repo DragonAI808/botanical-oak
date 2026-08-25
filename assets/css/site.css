@@ -437,8 +437,13 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   background:var(--forest-dk);
   color:var(--cream);
   padding:clamp(4.5rem,11vh,9rem) var(--pad);
-  display:grid; grid-template-columns:1fr auto;
-  gap:clamp(2.5rem,6vw,6rem);
+  display:grid;
+  /* auto/auto + centred, not 1fr/auto: the 1fr column stretched to fill the
+     section while .reel__type capped at 38rem, leaving dead space between the
+     headline and the clip. Sizing both columns to content keeps them paired. */
+  grid-template-columns:auto auto;
+  justify-content:center;
+  gap:clamp(2rem,4vw,4.5rem);
   align-items:center;
   overflow:hidden;
 }
@@ -846,8 +851,10 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   .craft__step{ opacity:1; padding:clamp(2rem,5vh,3rem) 0; }
   .craft__step:first-child{ padding-top:clamp(1.4rem,4vh,2.2rem); }
 
-  .reel{ grid-template-columns:1fr; justify-items:start; }
-  .reel__video{ align-self:center; }
+  .reel{ grid-template-columns:1fr; justify-items:start; justify-content:stretch; }
+  /* justify-self, not align-self: align-* is the vertical axis in a grid row,
+     so the clip stayed pinned left by justify-items:start */
+  .reel__video{ justify-self:center; }
 
   .split{ grid-template-columns:1fr; }
   .split__media{ min-height:56vh; }
