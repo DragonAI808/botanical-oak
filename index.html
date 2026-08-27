@@ -80,6 +80,9 @@
 <!-- ============ HERO ============ -->
 <section class="hero" id="hero">
   <div class="hero__media">
+    <!-- the mask lives on .hero__media and the pointer parallax on .hero__layer,
+         so the reveal edge stays still while the picture drifts inside it -->
+    <div class="hero__layer">
     <picture>
       <!-- portrait viewports get a genuinely vertical composition; cropping the
            landscape shot to a phone leaves an unusably narrow slice -->
@@ -89,6 +92,7 @@
       <source type="image/webp" srcset="assets/img/bar-1000.webp 1000w, assets/img/bar-1600.webp 1600w, assets/img/bar-2400.webp 2400w" sizes="100vw">
       <img src="assets/img/bar-1600.jpg" alt="A bar of The Botanical Oak soap on an oak windowsill with moss and oak leaves" fetchpriority="high" decoding="async">
     </picture>
+    </div>
   </div>
   <div class="hero__scrim"></div>
 

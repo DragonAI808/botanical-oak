@@ -239,7 +239,18 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   overflow:hidden;
   background:var(--forest-dk);
 }
-.hero__media{ position:absolute; inset:0; z-index:0; }
+.hero__media{
+  position:absolute; inset:0; z-index:0;
+  /* the entrance: image is uncovered by a rising edge rather than fading in */
+  clip-path:inset(0 0 100% 0);
+}
+.hero.is-in .hero__media{
+  clip-path:inset(0 0 0 0);
+  transition:clip-path 1.5s var(--ease-io);
+}
+/* separate layer so pointer drift moves the picture without dragging the
+   mask edge along with it */
+.hero__layer{ position:absolute; inset:0; will-change:transform; }
 .hero__media img{
   width:100%; height:100%; object-fit:cover; object-position:44% 58%;
   transform:scale(1.12);
@@ -276,13 +287,14 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   display:inline-block; overflow:hidden;
   vertical-align:bottom; padding-bottom:.08em;
 }
-.hero__title .ch{
+/* whole words ride up out of their masks, staggered — the same gesture as the
+   image reveal, where per-character motion read as a different, busier idea */
+.hero__title .wdr{
   display:inline-block;
-  transform:translateY(110%) rotate(4deg);
-  opacity:0;
-  transition:transform 1.05s var(--ease), opacity .7s var(--ease);
+  transform:translateY(110%);
+  transition:transform 1.15s var(--ease);
 }
-.hero__title.is-in .ch{ transform:none; opacity:1; }
+.hero.is-in .hero__title .wdr{ transform:none; }
 
 .hero__sub{
   font-family:var(--serif);
@@ -994,7 +1006,9 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   }
   .hero__media img{ transform:none; }
   [data-reveal]{ opacity:1; transform:none; }
-  .hero__title .ch{ opacity:1; transform:none; }
+  .hero__title .wdr{ transform:none; }
+  .hero__media{ clip-path:none !important; }
+  .hero__layer{ transform:none !important; }
   .reel__title .li{ transform:none; }
   .statement__text .wd{ opacity:1; transform:none; }
   .split__inner{ transform:none !important; }
