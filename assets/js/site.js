@@ -39,25 +39,24 @@
       t.dataset.done = '1';
       var words = t.textContent.trim().split(/\s+/);
       t.textContent = '';
+      var i = 0;
       words.forEach(function (w, wi) {
-        var ln = document.createElement('span');   // the mask
+        var ln = document.createElement('span');
         ln.className = 'ln';
-        var rise = document.createElement('span'); // what rides up out of it
-        rise.className = 'wdr';
-        rise.textContent = w;
-        rise.style.transitionDelay = (0.35 + wi * 0.09) + 's';
-        ln.appendChild(rise);
+        w.split('').forEach(function (c) {
+          var ch = document.createElement('span');
+          ch.className = 'ch';
+          ch.textContent = c;
+          ch.style.transitionDelay = (i * 0.032) + 's';
+          ln.appendChild(ch);
+          i++;
+        });
         t.appendChild(ln);
         if (wi < words.length - 1) t.appendChild(document.createTextNode(' '));
       });
-
-      // One trigger drives both the image mask and the words, so the entrance
-      // reads as a single gesture. Held a beat so the preloader curtain is
-      // already moving and the reveal is not hidden behind it.
-      var heroEl = document.getElementById('hero');
-      if (heroEl) {
-        setTimeout(function () { heroEl.classList.add('is-in'); }, 200);
-      }
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { t.classList.add('is-in'); });
+      });
     }
 
     // reel headline: wrap each line so it can ride up out of its mask
@@ -201,40 +200,6 @@
   }
 
   /* ---------------------------------------------------------------
-     6b. Hero depth — picture and type drift in opposite directions
-         against the pointer, which reads as depth from a flat photo.
-         Scroll pushes the picture in while the type lifts away.
-     --------------------------------------------------------------- */
-  var heroEl = $('#hero');
-  var heroLayer = $('.hero__layer');
-  var heroBody = $('.hero__body');
-  var hx = 0, hy = 0, hp = 0;
-
-  function paintHero() {
-    if (reduced || !heroLayer) return;
-    // deliberately low amplitude: past roughly 30px this stops reading as
-    // depth and starts reading as a gimmick
-    heroLayer.style.transform =
-      'translate3d(' + (-hx * 22).toFixed(2) + 'px,' + (-hy * 16 - hp * 34).toFixed(2) + 'px,0)';
-    if (heroBody) {
-      heroBody.style.transform =
-        'translate3d(' + (hx * 10).toFixed(2) + 'px,' + (hy * 7 - hp * 60).toFixed(2) + 'px,0)';
-      heroBody.style.opacity = String(1 - hp * 0.85);
-    }
-  }
-
-  if (heroEl && heroLayer && !reduced) {
-    heroEl.addEventListener('mousemove', function (e) {
-      var r = heroEl.getBoundingClientRect();
-      hx = (e.clientX - r.left) / r.width - 0.5;
-      hy = (e.clientY - r.top) / r.height - 0.5;
-      onScroll();
-    });
-    // ease back to centre rather than snapping when the pointer leaves
-    heroEl.addEventListener('mouseleave', function () { hx = 0; hy = 0; onScroll(); });
-  }
-
-  /* ---------------------------------------------------------------
      7. Parallax
      --------------------------------------------------------------- */
   var paras = $$('[data-parallax]');
@@ -261,11 +226,6 @@
     ticking = true;
     requestAnimationFrame(function () {
       onNavScroll();
-      if (heroEl) {
-        var hr = heroEl.getBoundingClientRect();
-        hp = Math.max(0, Math.min(1, -hr.top / (hr.height || 1)));
-      }
-      paintHero();
       paintWords();
       paintParallax();
       ticking = false;
