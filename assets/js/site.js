@@ -25,10 +25,34 @@
     setTimeout(function () {
       document.body.classList.add('is-loaded');
       splitHero();
+      startHeroVideo();
     }, wait);
   }
   window.addEventListener('load', lift);
   setTimeout(lift, 3500);
+
+  /* ---------------------------------------------------------------
+     1b. Hero video — held back until after load so it never competes
+         with the still for first paint. Wide viewports only: the phone
+         hero is an art-directed vertical crop that a landscape clip
+         would ruin, and it is a needless download on mobile data.
+     --------------------------------------------------------------- */
+  function startHeroVideo() {
+    var v = $('.hero__video');
+    if (!v || reduced) return;
+    if (!window.matchMedia('(min-width:701px)').matches) return;
+
+    v.addEventListener('canplay', function () {
+      v.classList.add('is-on');
+      var p = v.play();
+      // autoplay refused, or the file is missing: the still simply stays
+      if (p && p.catch) p.catch(function () { v.classList.remove('is-on'); });
+    }, { once: true });
+    v.addEventListener('error', function () { v.classList.remove('is-on'); }, { once: true });
+
+    v.src = 'assets/video/hero-loop.mp4';
+    v.load();
+  }
 
   /* ---------------------------------------------------------------
      2. Split text

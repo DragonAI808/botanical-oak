@@ -89,6 +89,9 @@
       <source type="image/webp" srcset="assets/img/bar-1000.webp 1000w, assets/img/bar-1600.webp 1600w, assets/img/bar-2400.webp 2400w" sizes="100vw">
       <img src="assets/img/bar-1600.jpg" alt="A bar of The Botanical Oak soap on an oak windowsill with moss and oak leaves" fetchpriority="high" decoding="async">
     </picture>
+    <!-- src is set by JS, and only on wide viewports: the still above is the
+         LCP element and paints first, the clip fades in over it once buffered -->
+    <video class="hero__video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
   </div>
   <div class="hero__scrim"></div>
 

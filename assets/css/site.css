@@ -247,6 +247,16 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
 }
 @keyframes kenburns{ from{ transform:scale(1.16); } to{ transform:scale(1.02); } }
 
+/* Sits over the still, same framing. Fades in rather than popping, so if it
+   buffers slowly the swap is never a visible jolt. */
+.hero__video{
+  position:absolute; inset:0;
+  width:100%; height:100%; object-fit:cover; object-position:44% 58%;
+  opacity:0; transition:opacity 1.4s var(--ease);
+  pointer-events:none;
+}
+.hero__video.is-on{ opacity:1; }
+
 .hero__scrim{
   position:absolute; inset:0; z-index:1;
   background:

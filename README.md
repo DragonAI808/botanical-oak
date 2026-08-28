@@ -29,7 +29,7 @@ bar.jpg …  ugc2.mp4   your original masters, untouched
 
 | Section | Notes |
 |---|---|
-| Hero | Full-bleed with a slow Ken Burns drift; headline rises letter-by-letter. Art-directed: landscape crop on desktop, a purpose-built vertical crop on phones. |
+| Hero | Full-bleed video on wide screens, still image on phones. The still paints first (it is the LCP element) and the clip fades in over it once buffered; if the video fails or autoplay is refused, the still simply stays. Headline rises letter-by-letter. |
 | Marquee | Infinite credential ticker. Pauses on hover. |
 | Statement | Words light up one at a time as you scroll through. |
 | The Bar | Pinned image on the left cross-fades through four images as the four process steps scroll past. |
@@ -162,6 +162,19 @@ The six-bar lineup for the Scents section comes from `newsoaps.jpeg`:
 ```bash
 ffmpeg -i newsoaps.jpeg -vf "scale='min(1600,iw)':-2:flags=lanczos" -c:v libwebp -quality 82 -compression_level 6 assets/img/scents-1600.webp
 ```
+
+The hero loop is built from a Higgsfield clip. It is ping-ponged — played
+forward then reversed — because the source is a one-directional push that would
+otherwise jump at the loop point. Reversing a slow dolly reads as a natural pull
+back, and needs no crossfade, so nothing goes soft:
+
+```bash
+ffmpeg -i soaplight.mp4 -filter_complex "[0:v]split[a][b];[b]reverse,trim=start_frame=1:end_frame=120,setpts=PTS-STARTPTS[r];[a][r]concat=n=2:v=1:a=0[v]" -map "[v]" -c:v libx264 -profile:v main -crf 26 -preset slow -pix_fmt yuv420p -an -movflags +faststart assets/video/hero-loop.mp4
+```
+
+Trimming one frame off each end of the reversed half removes the duplicate
+frames at the joins. Verify a new loop is seamless by diffing first against last
+frame — it should be near black.
 
 The hero's vertical crop is pulled from a frame of `stillvid.mp4`:
 
