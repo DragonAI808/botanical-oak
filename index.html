@@ -86,8 +86,10 @@
       <source media="(max-width:700px)" type="image/webp"
               srcset="assets/img/hero-portrait-720.webp 720w, assets/img/hero-portrait-1080.webp 1080w" sizes="100vw">
       <source media="(max-width:700px)" srcset="assets/img/hero-portrait-900.jpg">
-      <source type="image/webp" srcset="assets/img/bar-1000.webp 1000w, assets/img/bar-1600.webp 1600w, assets/img/bar-2400.webp 2400w" sizes="100vw">
-      <img src="assets/img/bar-1600.jpg" alt="A bar of The Botanical Oak soap on an oak windowsill with moss and oak leaves" fetchpriority="high" decoding="async">
+      <!-- wide screens use the video's own first frame, so when the clip fades
+           in there is nothing to cross-fade against and no double image -->
+      <source type="image/webp" srcset="assets/img/hero-poster-1280.webp">
+      <img src="assets/img/hero-poster-1280.jpg" alt="A bar of The Botanical Oak soap on an oak windowsill with moss and oak leaves" fetchpriority="high" decoding="async">
     </picture>
     <!-- src is set by JS, and only on wide viewports: the still above is the
          LCP element and paints first, the clip fades in over it once buffered -->

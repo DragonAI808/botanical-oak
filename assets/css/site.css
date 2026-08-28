@@ -245,6 +245,12 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   transform:scale(1.12);
   animation:kenburns 22s ease-out both;
 }
+/* When the clip is going to take over, the still must hold the video's exact
+   framing. Ken Burns drifting it to scale 1.15 while the video sits at 1.0 is
+   what produced a visible double image during the fade. Restored if the video
+   fails, so a still-only hero still has motion. */
+.hero.has-video .hero__media img{ animation:none; transform:none; }
+
 @keyframes kenburns{ from{ transform:scale(1.16); } to{ transform:scale(1.02); } }
 
 /* Sits over the still, same framing. Fades in rather than popping, so if it

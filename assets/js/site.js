@@ -38,19 +38,30 @@
          hero is an art-directed vertical crop that a landscape clip
          would ruin, and it is a needless download on mobile data.
      --------------------------------------------------------------- */
+  // Decided at parse time, not after load: the still must hold the video's
+  // framing from the very first frame. Deciding later let Ken Burns run to
+  // scale 1.15 and then snap back to 1.0 when the class landed.
+  var heroWantsVideo = !reduced && window.matchMedia('(min-width:701px)').matches;
+  if (heroWantsVideo) {
+    var heroEl0 = $('#hero');
+    if (heroEl0) heroEl0.classList.add('has-video');
+  }
+
   function startHeroVideo() {
     var v = $('.hero__video');
-    if (!v || reduced) return;
-    if (!window.matchMedia('(min-width:701px)').matches) return;
+    if (!v || !heroWantsVideo) return;
 
     v.addEventListener('canplay', function () {
       v.classList.add('is-on');
       var p = v.play();
-      // autoplay refused, or the file is missing: the still simply stays
       if (p && p.catch) p.catch(function () { v.classList.remove('is-on'); });
     }, { once: true });
+    // On failure the poster simply stays. It is the video's own first frame,
+    // so a static hero is a correct outcome, not a broken one — and leaving
+    // Ken Burns off avoids a jump in the opposite direction.
     v.addEventListener('error', function () { v.classList.remove('is-on'); }, { once: true });
 
+    // deferred to after load so it never competes with the still for first paint
     v.src = 'assets/video/hero-loop.mp4';
     v.load();
   }
