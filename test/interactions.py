@@ -5,6 +5,15 @@ from playwright.sync_api import sync_playwright
 URL = "http://localhost:4173"
 results = []
 
+def settled(page):
+    """Wait for the preloader to actually lift, not for a guessed number of ms.
+
+    The curtain holds for 3s by design, and that number has changed before.
+    Waiting on body.is-loaded keeps these tests correct whatever it becomes."""
+    page.wait_for_selector("body.is-loaded", timeout=15000)
+    page.wait_for_timeout(250)   # let the lift transition finish
+
+
 def check(name, got, want):
     ok = got == want
     results.append(ok)
@@ -16,7 +25,7 @@ with sync_playwright() as p:
     # ---------------- desktop ----------------
     pg = b.new_page(viewport={"width": 1440, "height": 900})
     pg.goto(URL); pg.wait_for_load_state("networkidle")
-    pg.wait_for_timeout(1500)  # preloader lift
+    settled(pg)
 
     print("\n[1] STORY CLIPS — unmute toggle + one-at-a-time")
     pg.locator("#stories").scroll_into_view_if_needed()
@@ -89,7 +98,7 @@ with sync_playwright() as p:
     # ---------------- mobile ----------------
     print("\n[5] MOBILE MENU")
     m = b.new_page(viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
-    m.goto(URL); m.wait_for_load_state("networkidle"); m.wait_for_timeout(1500)
+    m.goto(URL); m.wait_for_load_state("networkidle"); settled(m)
 
     burger = m.locator("#burger")
     check("menu starts closed", burger.get_attribute("aria-expanded"), "false")
@@ -137,7 +146,7 @@ with sync_playwright() as p:
     # ---------------- testimonials page ----------------
     print("\n[7] TESTIMONIALS PAGE")
     t = b.new_page(viewport={"width": 1440, "height": 900})
-    t.goto(URL + "/testimonials.html"); t.wait_for_load_state("networkidle"); t.wait_for_timeout(1600)
+    t.goto(URL + "/testimonials.html"); t.wait_for_load_state("networkidle"); settled(t)
     check("page loads with a title", "Testimonials" in t.title(), True)
     check("ten testimonials", t.locator(".tcard").count(), 10)
     check("every one has an attribution", t.locator(".tcard figcaption b").count(), 10)
@@ -163,7 +172,7 @@ with sync_playwright() as p:
 
     # and the home page must actually link to it
     h = b.new_page(viewport={"width": 1440, "height": 900})
-    h.goto(URL); h.wait_for_load_state("networkidle"); h.wait_for_timeout(1200)
+    h.goto(URL); h.wait_for_load_state("networkidle"); settled(h)
     check("home nav links to testimonials",
           h.locator('.nav__links a[href="testimonials.html"]').count(), 1)
     h.close()
