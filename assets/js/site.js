@@ -14,10 +14,10 @@
      1. Preloader — lift once assets are in, with a hard fallback so a
         slow font or video can never trap the page behind the curtain.
      --------------------------------------------------------------- */
-  // How long the curtain holds before lifting, even on an instant load. The
-  // leaf and wordmark finish their own entrance by ~1.2s, so the rest is a
-  // deliberate beat of stillness. Nobody is held under reduced motion.
-  var MIN_SHOW = reduced ? 0 : 3000;
+  // How long the curtain holds before lifting, even on an instant load. Tried
+  // 3s; it read as a stall on every repeat visit, since the hero headline then
+  // lands ~4.5s in. Nobody is held under reduced motion.
+  var MIN_SHOW = reduced ? 0 : 700;
   var start = Date.now();
   var lifted = false;
 
@@ -33,10 +33,8 @@
     }, wait);
   }
   window.addEventListener('load', lift);
-  // Hard stop: if load never fires, the page is never trapped behind the
-  // curtain. Sits just past MIN_SHOW so a slow asset still gets a chance to
-  // finish rather than being cut off the instant the hold expires.
-  setTimeout(lift, 4500);
+  // Hard stop: if load never fires, the page is never trapped behind the curtain.
+  setTimeout(lift, 3500);
 
   /* ---------------------------------------------------------------
      1b. Hero video — held back until after load so it never competes
