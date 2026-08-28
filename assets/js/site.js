@@ -75,19 +75,14 @@
       t.dataset.done = '1';
       var words = t.textContent.trim().split(/\s+/);
       t.textContent = '';
-      var i = 0;
       words.forEach(function (w, wi) {
-        var ln = document.createElement('span');
-        ln.className = 'ln';
-        w.split('').forEach(function (c) {
-          var ch = document.createElement('span');
-          ch.className = 'ch';
-          ch.textContent = c;
-          ch.style.transitionDelay = (i * 0.032) + 's';
-          ln.appendChild(ch);
-          i++;
-        });
-        t.appendChild(ln);
+        var fly = document.createElement('span');
+        fly.className = 'wfly';
+        fly.textContent = w;
+        // 1.35s lets the picture stand on its own first; 0.13s apart so the
+        // words arrive in sequence rather than as one block
+        fly.style.transitionDelay = (1.35 + wi * 0.13) + 's';
+        t.appendChild(fly);
         if (wi < words.length - 1) t.appendChild(document.createTextNode(' '));
       });
       requestAnimationFrame(function () {

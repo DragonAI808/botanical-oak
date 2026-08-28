@@ -287,18 +287,29 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   text-transform:uppercase;
   margin:0 0 1.5rem;
 }
-/* split-text: each char rides up out of its word's mask */
-.hero__title .ln{
-  display:inline-block; overflow:hidden;
-  vertical-align:bottom; padding-bottom:.08em;
-}
-.hero__title .ch{
+/* Hero entrance sequence. The picture lands alone and holds for a beat, then
+   the type arrives from the left in order: title, subhead, buttons. Everything
+   is driven by the single is-in class added at load, so the choreography lives
+   entirely in these transition-delays. No masks here — an overflow:hidden word
+   box would clip a horizontal slide. */
+.hero__title .wfly{
   display:inline-block;
-  transform:translateY(110%) rotate(4deg);
   opacity:0;
-  transition:transform 1.05s var(--ease), opacity .7s var(--ease);
+  transform:translateX(-90px);
+  transition:opacity .85s var(--ease), transform 1.05s var(--ease);
 }
-.hero__title.is-in .ch{ transform:none; opacity:1; }
+.hero__title.is-in .wfly{ opacity:1; transform:none; }
+
+/* the eyebrow is small, so it leads rather than competing with the title */
+.hero .eyebrow[data-reveal]{ transition-delay:1.15s; }
+
+.hero__sub[data-reveal]{
+  transform:translateX(-48px);
+  transition-delay:2.30s;
+}
+.hero__sub[data-reveal].is-in{ transform:none; }
+
+.hero__actions[data-reveal]{ transition-delay:2.62s; }
 
 .hero__sub{
   font-family:var(--serif);
@@ -1024,7 +1035,11 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   }
   .hero__media img{ transform:none; }
   [data-reveal]{ opacity:1; transform:none; }
-  .hero__title .ch{ opacity:1; transform:none; }
+  /* no choreography at all: everything is simply present */
+  .hero__title .wfly{ opacity:1; transform:none; }
+  .hero .eyebrow[data-reveal],
+  .hero__sub[data-reveal],
+  .hero__actions[data-reveal]{ transition-delay:0s; transform:none; }
   .reel__title .li{ transform:none; }
   .statement__text .wd{ opacity:1; transform:none; }
   .split__inner{ transform:none !important; }
