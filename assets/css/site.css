@@ -253,26 +253,34 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
    an overlay. Sits above the picture but below the scrim, so the text keeps
    its protection. */
 .hero__light{
-  position:absolute; inset:-30% -40%;
+  position:absolute; inset:-40% -60%;
   pointer-events:none;
-  background:radial-gradient(closest-side,
-    rgba(255,240,206,.62), rgba(255,240,206,.22) 52%, transparent 76%);
-  mix-blend-mode:soft-light;
+  /* A defined band rather than a broad blob: a wide soft blob at soft-light
+     moved the frame by ~3%, which is invisible. An angled band on `screen`
+     adds light the way light actually behaves, so the sweep is legible. */
+  background:linear-gradient(102deg,
+    transparent 28%,
+    rgba(255,242,214,.10) 38%,
+    rgba(255,246,224,.36) 46%,
+    rgba(255,250,233,.54) 50%,
+    rgba(255,246,224,.36) 54%,
+    rgba(255,242,214,.10) 62%,
+    transparent 72%);
+  mix-blend-mode:screen;
   will-change:transform, opacity;
-  animation:heroSweep 17s cubic-bezier(.45,.05,.55,.95) infinite;
+  animation:heroSweep 11s ease-in-out infinite;
 }
 @keyframes heroSweep{
-  0%   { transform:translate3d(-58%,-12%,0) scale(.92); opacity:0; }
-  14%  { opacity:.95; }
-  50%  { transform:translate3d(0,0,0)      scale(1.14); opacity:1; }
-  86%  { opacity:.90; }
-  100% { transform:translate3d(58%,10%,0)  scale(.92); opacity:0; }
+  0%,3%    { transform:translate3d(-60%,0,0); opacity:0; }
+  16%      { opacity:1; }
+  84%      { opacity:1; }
+  97%,100% { transform:translate3d(60%,0,0);  opacity:0; }
 }
 
 .hero__scrim{
   position:absolute; inset:0; z-index:1;
   background:
-    linear-gradient(to top, rgba(12,26,19,.90) 0%, rgba(12,26,19,.66) 30%, rgba(12,26,19,.30) 56%, rgba(12,26,19,.04) 82%),
+    linear-gradient(to top, rgba(12,26,19,.90) 0%, rgba(12,26,19,.72) 30%, rgba(12,26,19,.44) 56%, rgba(12,26,19,.08) 82%),
     linear-gradient(to right, rgba(12,26,19,.62) 0%, rgba(12,26,19,.22) 34%, transparent 62%),
     radial-gradient(120% 90% at 30% 100%, rgba(20,41,31,.5), transparent 72%);
 }
