@@ -247,28 +247,6 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
 }
 @keyframes kenburns{ from{ transform:scale(1.16); } to{ transform:scale(1.02); } }
 
-/* A slow warm sweep, as though the sun were tracking across the window in the
-   photograph. soft-light lifts the highlights that are already in the frame
-   rather than laying a flat haze over it, so it reads as light rather than as
-   an overlay. Sits above the picture but below the scrim, so the text keeps
-   its protection. */
-.hero__light{
-  position:absolute; inset:-30% -40%;
-  pointer-events:none;
-  background:radial-gradient(closest-side,
-    rgba(255,240,206,.62), rgba(255,240,206,.22) 52%, transparent 76%);
-  mix-blend-mode:soft-light;
-  will-change:transform, opacity;
-  animation:heroSweep 17s cubic-bezier(.45,.05,.55,.95) infinite;
-}
-@keyframes heroSweep{
-  0%   { transform:translate3d(-58%,-12%,0) scale(.92); opacity:0; }
-  14%  { opacity:.95; }
-  50%  { transform:translate3d(0,0,0)      scale(1.14); opacity:1; }
-  86%  { opacity:.90; }
-  100% { transform:translate3d(58%,10%,0)  scale(.92); opacity:0; }
-}
-
 .hero__scrim{
   position:absolute; inset:0; z-index:1;
   background:
@@ -1015,8 +993,6 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
     scroll-behavior:auto !important;
   }
   .hero__media img{ transform:none; }
-  /* hold the light still rather than letting it snap to its invisible end frame */
-  .hero__light{ animation:none; transform:none; opacity:.55; }
   [data-reveal]{ opacity:1; transform:none; }
   .hero__title .ch{ opacity:1; transform:none; }
   .reel__title .li{ transform:none; }
