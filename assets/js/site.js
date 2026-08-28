@@ -26,6 +26,7 @@
       document.body.classList.add('is-loaded');
       splitHero();
       startHeroVideo();
+      revealHero();
     }, wait);
   }
   window.addEventListener('load', lift);
@@ -110,6 +111,18 @@
   $$('[data-reveal], [data-split-lines]').forEach(function (el) {
     revealIO.observe(el);
   });
+
+  // The hero is above the fold on load, so its content must not wait on a
+  // scroll observer. On a phone the buttons sat exactly on the observer's -8%
+  // bottom edge and never intersected enough to fire, leaving the two hero
+  // CTAs permanently invisible. Reveal them on load instead; the staggered
+  // data-delay transitions still play.
+  function revealHero() {
+    $$('#hero [data-reveal]').forEach(function (el) {
+      revealIO.unobserve(el);
+      el.classList.add('is-in');
+    });
+  }
 
   /* ---------------------------------------------------------------
      4. Nav — stuck state + mobile menu

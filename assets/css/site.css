@@ -983,7 +983,13 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
   .hero__title{ font-size:clamp(2.6rem,.6rem + 8vw,4rem); margin-bottom:1.1rem; }
   .hero__sub{ font-size:1.05rem; margin-bottom:1.6rem; }
   .hero__actions{ flex-wrap:nowrap; gap:.6rem; }
-  .hero__actions .btn{ flex:1 1 50%; justify-content:center; padding-inline:1rem; }
+  /* the labels grew when commerce came out ("See the collection" replaced a
+     much shorter one) and started wrapping to two lines at 50% width */
+  .hero__actions .btn{
+    flex:1 1 50%; justify-content:center;
+    font-size:.6rem; letter-spacing:.14em;
+    padding-inline:.8rem; gap:.45em;
+  }
   .eyebrow{ letter-spacing:.2em; margin-bottom:1rem; }
   .foot__top{ grid-template-columns:1fr; }
   .foot__cols{ grid-template-columns:repeat(2,1fr); }
@@ -995,6 +1001,14 @@ body:not(.is-loaded){ overflow:hidden; height:100vh; }
 /* ==========================================================================
    REDUCED MOTION
    ========================================================================== */
+/* Below ~360px even the shortened labels wrap. Stacking is not just tidier
+   there, it is shorter: two wrapped side-by-side buttons are taller than two
+   single-line stacked ones. */
+@media (max-width:359px){
+  .hero__actions{ flex-wrap:wrap; }
+  .hero__actions .btn{ flex:1 1 100%; font-size:.64rem; }
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{
     animation-duration:.001ms !important;
